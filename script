@@ -4,19 +4,16 @@ wget https://releases.hashicorp.com/terraform/0.14.9/terraform_0.14.9_linux_amd6
 unzip terraform_0.14.9_linux_amd64.zip
 mv terraform /usr/local/bin
 
-sudo apt-get install python-pip -y
-sudo yum install epel-release -y
-sudo yum install python3-pip.noarch -y
+sudo apt-get install python-pip -y || sudo yum install epel-release -y; sudo yum install python3-pip.noarch -y
+# Install Python PIP on debian and RPM distros 
 
-sudo python3 -m pip install awscli # RPM Distro installation of awscli via Pip.
-sudo pip install awscli #deb Distro installation of awscli via pip
+sudo python3 -m pip install awscli || sudo pip install awscli #Install AWS CLI on Debian and RPM Distros. 
  
 terraform init 
 terraform plan 
 terraform apply -auto-approve
 
-sudo python3 -m pip install ansible # RPM Distro installation of ansible via pip
-sudo pip install ansible # deb Distro installation of ansible by pip, will return error if on rpm distro.
+sudo python3 -m pip install ansible || sudo pip install ansible # deb+rpm Distro installation of ansible by pip.
 
 sudo mkdir /etc/ansible # create Ansible configuration folder. (last resort for ansible, it first looks at ENV, Homefolder and current folder for configs) 
 sudo touch /etc/ansible/hosts # Create hosts file if not existent, (because of PIP install ansible will be local to user, so we need to create it ) 
