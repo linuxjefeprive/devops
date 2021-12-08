@@ -18,7 +18,8 @@ terraform apply -auto-approve
 sudo python3 -m pip install ansible # RPM Distro installation of ansible via pip
 sudo pip install ansible # deb Distro installation of ansible by pip, will return error if on rpm distro.
 
-echo "[ec2_instances]
+sudo touch /etc/ansible/hosts # Create hosts file if not existent, (because of PIP install ansible will be local to user, so we need to create it ) 
+sudo echo "[ec2_instances]
 `terraform output -raw instance_public_ip` ansible_user=ec2-user remote_user=ec2-user ansible_ssh_private_key_file=~/.ssh/thekey.pem" > /etc/ansible/hosts
 # Here we add the IP Address and username + SSH key for the newly created EC2 Instance to the ansible hosts file, so we are able to connect to it. 
 
