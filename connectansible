@@ -1,0 +1,8 @@
+#!/bin/bash
+cd ~/terraform/ 
+echo "[ec2_instances]
+`terraform output -raw instance_public_ip` ansible_user=ec2-user remote_user=ec2-user ansible_ssh_private_key_file=~/.ssh/thekey.pem" > /etc/ansible/hosts
+# Here we add the IP Address and username + SSH key for the newly created EC2 Instance to the ansible hosts file, so we are able to connect to it. 
+
+chmod 600 ~/.ssh/thekey.pem # Here we set the permissions for the keyfile to be only rw for the owner, to prevent security issues, and make it easier for ansible to work with the file. 
+exit 0  
