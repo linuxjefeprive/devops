@@ -8,7 +8,7 @@ sudo apt-get install pip python-pip -y
 sudo yum install epel-release -y
 sudo yum install python3-pip.noarch -y
 
-pip install awscli 
+sudo python3 -m pip install awscli 
 terraform init 
 terraform plan 
 terraform apply -auto-approve
