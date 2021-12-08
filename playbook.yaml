@@ -3,15 +3,23 @@
   remote_user: root
   vars:
     package_names:
-      - openjdk-11-jdk
-      - python 
-      - jenkins
+      - openjdk-11-jdk # for Debian Distro's
+      - java-11-openjdk-devel-11 # for RPM Distro's
+      - python # Distro's the same
+      - jenkins # Same on both Distro's
 
   tasks:
 
-    - name: Add Jenkins Repository to Debian Distro 
-      command: sudo wget  https://pkg.jenkins.io/debian-stable/jenkins.io.key && sudo apt-key add jenkins.io.key && echo deb https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null && sudo apt-get update
+    - name: Add Jenkins Repository to Debian Distro via script
+      script: ~/devops/debrepo.sh
       become: yes
+      when: when: ansible_facts['os_family'] == "Debian"
+
+    - name: Add Jenkins Repository to Red Hat Distro via script
+      script: ~/devops/rpmrepo.sh
+      become: yes
+      when: when: ansible_facts['os_family'] == "RedHat"
+
 
     - name: "Check if listed package is installed or not on Debian Linux family"
 
@@ -35,4 +43,36 @@
       loop: "{{ package_names }}"
 
       when: debian_package_check is failed and ansible_facts['os_family'] == "Debian"
+
+    - name: "Check if listed package is installed or not on Red Hat Linux family"
+
+      command: rpm -q "{{ item }}"
+
+      loop: "{{ package_names }}"
+
+      register: redhat_package_check
+
+      changed_when: false
+
+      ignore_errors: true
+
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Install package if not present RedHat
+
+      package:
+
+        name: "{{ item }}"
+
+        state: present
+
+      loop: "{{ package_names }}"
+
+      when: redhat_package_check is failed and ansible_facts['os_family'] == "RedHat"
+
+
+
+
+
+
 
