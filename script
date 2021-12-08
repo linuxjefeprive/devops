@@ -4,7 +4,7 @@ wget https://releases.hashicorp.com/terraform/0.14.9/terraform_0.14.9_linux_amd6
 unzip terraform_0.14.9_linux_amd64.zip
 mv terraform /usr/local/bin
 
-sudo apt-get install pip python-pip -y
+sudo apt-get install python-pip -y
 sudo yum install epel-release -y
 sudo yum install python3-pip.noarch -y
 
