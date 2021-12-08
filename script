@@ -7,13 +7,14 @@ mv terraform /usr/local/bin
 sudo apt-get install python-pip -y 
 pip install awscli 
 terraform init 
-terraform apply --auto-aprove
+terraform plan 
+terraform apply -auto-approve
 
 sudo apt-get install -f -y
 sudo apt-get install software-properties-common -y 
-sudo apt-add-repository ppa:ansible/ansible
-sudo apt-get update -y 
-sudo apt-get install ansible -y 
+sudo apt-add-repository ppa:ansible/ansible -y
+sudo apt-get update -y
+sudo apt-get install ansible -yy 
 
 
 echo "[ec2_instances]
