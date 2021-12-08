@@ -1,9 +1,38 @@
 - name: Playbook 1
+  hosts: ec2_instances
+  remote_user: root
+  vars:
+    package_names:
+      - openjdk-11-jdk
+      - python 
+      - jenkins
 
-  hosts: ec2_instances 
   tasks:
-    - name: Installation of required packages 
-      apt:
-        name: openjdk-11-jdk python3 jenkins
-        state: latest 
+
+    - name: Add Jenkins Repository to Debian Distro 
+      command: sudo wget  https://pkg.jenkins.io/debian-stable/jenkins.io.key && sudo apt-key add jenkins.io.key && echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null && sudo apt-get update
+      become: yes
+
+    - name: "Check if listed package is installed or not on Debian Linux family"
+
+      command: dpkg-query -l "{{ item }}"
+
+      loop: "{{ package_names }}"
+
+      register: debian_package_check
+
+      when: ansible_facts['os_family'] == "Debian"
+
+
+    - name: Install package if not present Debian
+
+      package:
+
+        name: "{{ item }}"
+
+        state: present
+
+      loop: "{{ package_names }}"
+
+      when: debian_package_check is failed and ansible_facts['os_family'] == "Debian"
 
