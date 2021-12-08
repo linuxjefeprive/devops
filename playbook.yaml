@@ -4,7 +4,7 @@
   vars:
     package_names:
       - openjdk-11-jdk # for Debian Distro's
-      - java-11-openjdk-devel-11 # for RPM Distro's
+      - java-11-openjdk-devel # for RPM Distro's
       - python # Distro's the same
       - jenkins # Same on both Distro's
 
@@ -13,12 +13,12 @@
     - name: Add Jenkins Repository to Debian Distro via script
       script: ~/devops/debrepo.sh
       become: yes
-      when: when: ansible_facts['os_family'] == "Debian"
+      when: ansible_facts['os_family'] == "Debian"
 
     - name: Add Jenkins Repository to Red Hat Distro via script
       script: ~/devops/rpmrepo.sh
       become: yes
-      when: when: ansible_facts['os_family'] == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
 
 
     - name: "Check if listed package is installed or not on Debian Linux family"
@@ -33,7 +33,7 @@
 
 
     - name: Install package if not present Debian
-
+      become: yes
       package:
 
         name: "{{ item }}"
@@ -59,7 +59,7 @@
       when: ansible_facts['os_family'] == "RedHat"
 
     - name: Install package if not present RedHat
-
+      become: yes 
       package:
 
         name: "{{ item }}"
