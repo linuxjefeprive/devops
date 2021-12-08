@@ -1,0 +1,9 @@
+- name: Playbook 1
+
+  hosts: ec2_instances 
+  tasks:
+    - name: Installation of required packages 
+      apt:
+        name: openjdk-11-jdk python3 jenkins
+        state: latest 
+
