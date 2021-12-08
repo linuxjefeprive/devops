@@ -4,18 +4,16 @@ wget https://releases.hashicorp.com/terraform/0.14.9/terraform_0.14.9_linux_amd6
 unzip terraform_0.14.9_linux_amd64.zip
 mv terraform /usr/local/bin
 
-sudo apt-get install python-pip -y 
+sudo apt-get install pip python-pip -y
+sudo yum install epel-release -y
+sudo yum install python3-pip.noarch -y
+
 pip install awscli 
 terraform init 
 terraform plan 
 terraform apply -auto-approve
 
-sudo apt-get install -f -y
-sudo apt-get install software-properties-common -y 
-sudo apt-add-repository ppa:ansible/ansible -y
-sudo apt-get update -y
-sudo apt-get install ansible -yy 
-
+sudo python3 -m pip install ansible
 
 echo "[ec2_instances]
 `terraform output -raw instance_public_ip` ansible_user=ec2-user remote_user=ec2-user ansible_ssh_private_key_file=~/.ssh/thekey.pem" > /etc/ansible/hosts
