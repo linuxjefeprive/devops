@@ -22,12 +22,12 @@ fi
  
 /usr/local/bin/terraform init # using full path to binary because root on RPM does not include /usr/local/bin in PATH's  
 /usr/local/bin/terraform plan 
-/usr/loca/bin/terraform apply -auto-approve
+/usr/local/bin/terraform apply -auto-approve
 
 sudo mkdir /etc/ansible # create Ansible configuration folder. (last resort for ansible, it first looks at ENV, Homefolder and current folder for configs) 
 sudo touch /etc/ansible/hosts # Create hosts file if not existent, (because of PIP install ansible will be local to user, so we need to create it ) 
 sudo echo "[ec2_instances]
-`terraform output -raw instance_public_ip` ansible_user=ec2-user remote_user=ec2-user ansible_ssh_private_key_file=~/.ssh/thekey.pem" > /etc/ansible/hosts
+`/usr/local/bin/terraform output -raw instance_public_ip` ansible_user=ec2-user remote_user=ec2-user ansible_ssh_private_key_file=~/.ssh/thekey.pem" > /etc/ansible/hosts
 # Here we add the IP Address and username + SSH key for the newly created EC2 Instance to the ansible hosts file, so we are able to connect to it. 
 
 sudo chown `ls -ld ~/.ssh/ | awk '{print $3}'` ~/.ssh/thekey.pem # Because of Sudo/Root invocation the keyfile is now owned by root. We need to change this to the user that runs the script. Hence the inspecting of the home folder. 
