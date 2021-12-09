@@ -58,10 +58,6 @@ echo " going to sleep for 20 seconds before deploying post-install script "
 sleep 20s 
 /usr/bin/ansible-playbook post-install-rpm.yaml # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options
 
-echo " sleep 15 seconds to obtain password "
-sleep 15s
+echo " All done, browse to `/usr/local/bin/terraform output -raw instance_public_ip`:8080 to see the result. Password is `cat $PWD/initialAdminPassword` "
 
-scp -i $PWD/.ssh/thekey.pem ec2-user@`/usr/local/bin/terraform output -raw instance_public_ip`:/var/lib/jenkins/secrets/initialAdminPassword $PWD/
-
-echo " All done, browse to `/usr/local/bin/terraform output -raw instance_public_ip`:8080 to see the result. Password is /devops/initialAdminPassword"
 exit 0
