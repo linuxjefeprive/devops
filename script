@@ -61,7 +61,7 @@ sleep 20s
 echo " sleep 15 seconds to obtain password "
 sleep 15s
 
-scp ec2-user@`/usr/local/bin/terraform output -raw instance_public_ip`:/var/lib/jenkins/secrets/initialAdminPassword $PWD/
+scp -i $PWD/.ssh/thekey.pem ec2-user@`/usr/local/bin/terraform output -raw instance_public_ip`:/var/lib/jenkins/secrets/initialAdminPassword $PWD/
 
 echo " All done, browse to `/usr/local/bin/terraform output -raw instance_public_ip`:8080 to see the result. Password is /devops/initialAdminPassword"
 exit 0
