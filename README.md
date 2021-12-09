@@ -5,7 +5,7 @@ The assignment states we need to build a EC2 Instance using Terraform, and insta
 
 I have made a github repo containing completely automated deployment of Terraform, Ansible, EC2 Instance, python,java and jenkins. 
 The deployment is written in a way to be compatible on both .deb and .rpm distro's. This goes for the master OS (where the script is run) as well as the instance. 
-The deployment is tested on ubutnu 18.04, 20.04, and CentOS 8. Everything runs smoothly on all these OS's. I have not tested on other RPM / DEB distro's, but I imagine the script running just fine. 
+The deployment is tested on ubutnu 18.04 and CentOS 8. Everything runs smoothly on all these OS's. I have not tested on other RPM / DEB distro's, but I imagine the script running just fine. 
 If not, only very minor modifications are needed to make it run on other deb/rpm distros.
 
 The script fully sets up a keypair, security group, ec2 instance, firewall rules, python,java and jenkins installation with a working jenkins server reachable from the internet
