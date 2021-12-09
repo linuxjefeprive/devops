@@ -29,7 +29,7 @@ resource "aws_key_pair" "thekey" {
 # Make sure the private key is saved locally to allow for loging in, especially to allow ansible to login without password. 
   provisioner "local-exec" { # Create a local copy of the private key named "thekey.pem"
 
-    command = "echo '${tls_private_key.pk.private_key_pem}' > `pwd`/.ssh/thekey.pem " # Export the key to the devops/.ssh/ folder, for easy access using ansible. 
+    command = "echo '${tls_private_key.pk.private_key_pem}' > `sudo grep $(logname) /etc/passwd | awk -F: '{print $6}'`/.ssh/thekey.pem " # Export the key to the home/.ssh/ folder, for easy access using ansible. 
   }
 
 }
