@@ -8,6 +8,7 @@ The deployment is written in a way to be compatible on both .deb and .rpm distro
 The deployment is tested on ubutnu 18.04, 20.04, and CentOS 8. Everything runs smoothly on all these OS's. I have not tested on other RPM / DEB distro's, but I imagine the script running just fine. 
 If not, only very minor modifications are needed to make it run on other deb/rpm distros.
 
+The script fully sets up a keypair, security group, ec2 instance, firewall rules, python,java and jenkins installation with a working jenkins server reachable from the internet
 
 All you have to do to invoke the deployment is the following;
 
@@ -23,8 +24,21 @@ For grading, I made detailed comments in all the files contained in this repo. P
 
 I would advise you to review the files in the order they are invoked; 
 
-README
+README.md
 script
+
+main.tf 
+keygen.tf
+creds.tf
+security.tf
+outputs.tf 
+
+playbook.yaml 
+rpmrepo.sh
+debrepo.sh
+
+post-install-rpm.yaml
+post-install.sh 
 
 
 
