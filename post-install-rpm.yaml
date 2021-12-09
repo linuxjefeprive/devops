@@ -7,14 +7,3 @@
       become: yes # become root
       when: ansible_facts['os_family'] == "RedHat" # Only for RedHat distro's
 
-    - name: Ansible copy file to remote server # We need the Jenkins Admin password for first login, this is stored here, we will fetch it to ~/devops/
-      
-      fetch:
-       
-        src: /var/lib/jenkins/secrets/initialAdminPassword 
-
-        dest: ./
-
-        flat: yes
-
-        mode: 0744 # Permissions on file can be non-strict, since the password is used only once anyway.  
