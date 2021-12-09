@@ -11,12 +11,12 @@
   tasks:
 
     - name: Add Jenkins Repository to Debian Distro via script
-      script: ~/devops/debrepo.sh # Upload the script suited to prepare debian distro's for Jenkins install
+      script: debrepo.sh # Upload the script suited to prepare debian distro's for Jenkins install
       become: yes # Become Root
       when: ansible_facts['os_family'] == "Debian" # only execute on Debian
 
     - name: Add Jenkins Repository to Red Hat Distro via script 
-      script: ~/devops/rpmrepo.sh # Upload the script to prepare RedHat Distro's for jenkins installation. Script contains special Amazon recognizer to enable stream via amazon-linux-extra's.
+      script: rpmrepo.sh # Upload the script to prepare RedHat Distro's for jenkins installation. Script contains special Amazon recognizer to enable stream via amazon-linux-extra's.
       become: yes # become root
       when: ansible_facts['os_family'] == "RedHat" # Only for RedHat distro's 
 
