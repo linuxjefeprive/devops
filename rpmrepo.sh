@@ -1,5 +1,5 @@
 #!/bin/bash
-OS=`hostnamectl` | grep -i "operating system" | awk '{print $3}' # See if we are running an Amazon OS, since these are very minimal
+OS=$(hostnamectl | grep -i "operating system" | awk '{print $3}') # See if we are running an Amazon OS, since these are very minimal
 
 sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo # Install Repo data for yum
 sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key # Install GPG key for the repo 
