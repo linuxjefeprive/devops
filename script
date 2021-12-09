@@ -1,26 +1,25 @@
 #!/bin/bash 
-wget https://releases.hashicorp.com/terraform/0.14.9/terraform_0.14.9_linux_amd64.zip
-unzip terraform_0.14.9_linux_amd64.zip
-mv terraform /usr/local/bin
+wget https://releases.hashicorp.com/terraform/0.14.9/terraform_0.14.9_linux_amd64.zip   # Get the Terraform binary, in zip file
+unzip terraform_0.14.9_linux_amd64.zip  # unzip the binary
+mv terraform /usr/local/bin # place the binary in the usr/bin/ folder to have easy access. (/usr/local/bin is standard path for shell )
 
-if [[ -f /usr/bin/apt ]]; then 
+if [[ -f /usr/bin/apt ]]; then  # See if apt is installed, if so install pip and use pip to install ansible and awscli using debian commands. 
 sudo apt-get install python-pip -y
-sudo pip install awscli
+sudo pip install awscli ansible 
 
-elif [[ -f /usr/bin/yum ]]; then
+elif [[ -f /usr/bin/yum ]]; then # If yum is installed instead of debian then use the yum commands to install pip, ansible and awscli. 
 sudo yum install epel-release -y; sudo yum install python3-pip.noarch -y
-sudo python3 -m pip install awscli 
+sudo python3 -m pip install awscli ansible
 
-else 
-exit 0 
+else  # If none of the above package managers are installed, I can not guarantee the working of the script, so we fail. 
+echo "Non .deb/.rpm distro detected, script not compatible"  
+exit 1
 
 fi 
  
 terraform init 
 terraform plan 
 terraform apply -auto-approve
-
-sudo python3 -m pip install ansible || sudo pip install ansible # deb+rpm Distro installation of ansible by pip.
 
 sudo mkdir /etc/ansible # create Ansible configuration folder. (last resort for ansible, it first looks at ENV, Homefolder and current folder for configs) 
 sudo touch /etc/ansible/hosts # Create hosts file if not existent, (because of PIP install ansible will be local to user, so we need to create it ) 
@@ -29,6 +28,8 @@ sudo echo "[ec2_instances]
 # Here we add the IP Address and username + SSH key for the newly created EC2 Instance to the ansible hosts file, so we are able to connect to it. 
 
 sudo chown `ls -ld ~/.ssh/ | awk '{print $3}'` ~/.ssh/thekey.pem # Because of Sudo/Root invocation the keyfile is now owned by root. We need to change this to the user that runs the script. Hence the inspecting of the home folder. 
-sudo chgrp `ls -ld ~/.ssh/ | awk '{print $3}'` ~/.ssh/thekey.pem
+sudo chgrp `ls -ld ~/.ssh/ | awk '{print $3}'` ~/.ssh/thekey.pem # Set group to users group. (based of home folder)
 sudo chmod 600 ~/.ssh/thekey.pem # Here we set the permissions for the keyfile to be only rw for the owner, to prevent security issues, and make it easier for ansible to work with the file. 
+
+ansible-playbook playbook.yaml # Here we use Ansible to run our playbook, which is also compatible on RedHat as well as Debian Distro's. (And AWS Linux, very minimal).  
 exit 0
