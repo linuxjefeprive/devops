@@ -1,3 +1,5 @@
+# This file contains the credentials used to log into AWS. Must be reloaded every 8 hours since our AWS account renews every 8 hours.
+
 provider "aws" {
 
   access_key = "ASIAZOGO67FNN7XARD63"
