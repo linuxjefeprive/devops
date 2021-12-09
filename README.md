@@ -43,5 +43,7 @@ debrepo.sh
 post-install-rpm.yaml
 post-install.sh 
 
+password.yaml 
+
 
 
