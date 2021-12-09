@@ -1,4 +1,11 @@
-#!/bin/bash 
+#!/bin/bash
+
+if (( $EUID != 0 )); then # Because our script requires root privileges we need to check if the script is run as root. If not, the script should fail. 
+    echo "Please run this script as root. (sudo ./script)"
+    exit 1
+fi
+
+ 
 wget https://releases.hashicorp.com/terraform/0.14.9/terraform_0.14.9_linux_amd64.zip   # Get the Terraform binary, in zip file
 unzip terraform_0.14.9_linux_amd64.zip  # unzip the binary
 mv terraform /usr/local/bin # place the binary in the usr/bin/ folder to have easy access. (/usr/local/bin is standard path for shell )
