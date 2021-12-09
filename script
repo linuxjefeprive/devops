@@ -1,5 +1,5 @@
 #!/bin/bash
-
+HOME=`sudo grep `logname` /etc/passwd | awk -F: '{print $6}'` # Set HOME folder of user invoking the script.
 PWD=$(pwd) # We want to set the folder the script is run from  as a variable, for later usage in the script.
 
 if (( $EUID != 0 )); then # Because our script requires root privileges we need to check if the script is run as root. If not, the script should fail. 
@@ -52,14 +52,16 @@ sleep 30s # Put the script to sleep for 0.5 minute
 ssh -o "StrictHostKeyChecking no" ec2-user@`/usr/local/bin/terraform output -raw instance_public_ip` #Here we add the remote key fingerprint for automation.
 
 sleep 5s
-/usr/local/bin/ansible-playbook playbook.yaml # Here we use Ansible to run our playbook, which is also compatible on RedHat as well as Debian Distro's. (And AWS Linux, very minimal).  
-
+/usr/local/bin/ansible-playbook playbook.yaml || $HOME/.local/usr/bin/ansible-playbook playbook.yaml
+ # Here we use Ansible to run our playbook, which is also compatible on RedHat as well as Debian Distro's. (And AWS Linux, very minimal).  
+# The script uses the .local folder in your home when the first command fails, since pip in Ubuntu 20.04 installs there.
 echo " going to sleep for 20 seconds before deploying post-install script "
 sleep 20s 
-/usr/local/bin/ansible-playbook post-install-rpm.yaml  # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options
+/usr/local/bin/ansible-playbook post-install-rpm.yaml $HOME/.local/usr/bin/ansible-playbook.yaml 
+ # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options
 
 sleep 10s 
-/usr/local/bin/ansible-playbook password.yaml 
+/usr/local/bin/ansible-playbook password.yaml  || $HOME/.local/usr/bin/ansible-playbook.yaml password.yaml
 
 echo " All done, browse to `/usr/local/bin/terraform output -raw instance_public_ip`:8080 to see the result. Password is `cat $PWD/initialAdminPassword` "
 
