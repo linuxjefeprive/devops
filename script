@@ -34,6 +34,10 @@ fi
 /usr/local/bin/terraform plan 
 /usr/local/bin/terraform apply -auto-approve
 
+mkdir $HOME/.ssh/ # make sure folder .ssh exists
+chown $USER $HOME/.ssh/  # set owner and group to user instead of root 
+chgrp $USER $HOME/.ssh/
+
 sudo mkdir /etc/ansible # create Ansible configuration folder. (last resort for ansible, it first looks at ENV, Homefolder and current folder for configs) 
 sudo touch /etc/ansible/hosts # Create hosts file if not existent, (because of PIP install ansible will be local to user, so we need to create it ) 
 sudo echo "[ec2_instances]
