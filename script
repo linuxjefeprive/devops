@@ -1,13 +1,20 @@
-#!/bin/bash
-cd ./devops 
+#!/bin/bash 
 wget https://releases.hashicorp.com/terraform/0.14.9/terraform_0.14.9_linux_amd64.zip
 unzip terraform_0.14.9_linux_amd64.zip
 mv terraform /usr/local/bin
 
-sudo apt-get install python-pip -y || sudo yum install epel-release -y; sudo yum install python3-pip.noarch -y
-# Install Python PIP on debian and RPM distros 
+if [[ -f /usr/bin/apt ]]; then 
+sudo apt-get install python-pip -y
+sudo pip install awscli
 
-sudo python3 -m pip install awscli || sudo pip install awscli #Install AWS CLI on Debian and RPM Distros. 
+elif [[ -f /usr/bin/yum ]]; then
+sudo yum install epel-release -y; sudo yum install python3-pip.noarch -y
+sudo python3 -m pip install awscli 
+
+else 
+exit 0 
+
+fi 
  
 terraform init 
 terraform plan 
