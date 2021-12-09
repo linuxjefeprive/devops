@@ -18,6 +18,22 @@ resource "aws_security_group" "security_group" {
 
   }
 
+# Incoming traffic from all IP's on port 22/tcp is allowed.
+  ingress {
+
+    from_port   = 8080
+
+    to_port     = 8080
+
+    protocol    = "tcp"
+
+    cidr_blocks = ["0.0.0.0/0"]
+
+  }
+
+
+
+
 
 
   # Allow outgoing traffic to anywhere.
