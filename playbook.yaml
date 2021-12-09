@@ -1,8 +1,8 @@
 - name: Playbook 1
-  hosts: ec2_instances
-  remote_user: root
-  vars:
-    package_names:
+  hosts: ec2_instances # set the hostnames we have set in main script. 
+  remote_user: root # set user as root
+  vars: 
+    package_names: # list required packages, a bit sloppy not splitting up rpm and deb packages, but the playbook will later decide on what distro and upload the apropriate script to the server.
       - openjdk-11-jdk # for Debian Distro's
       - java-11-openjdk-devel # for RPM Distro's
       - python # Distro's the same
@@ -11,29 +11,29 @@
   tasks:
 
     - name: Add Jenkins Repository to Debian Distro via script
-      script: ~/devops/debrepo.sh
-      become: yes
-      when: ansible_facts['os_family'] == "Debian"
+      script: ~/devops/debrepo.sh # Upload the script suited to prepare debian distro's for Jenkins install
+      become: yes # Become Root
+      when: ansible_facts['os_family'] == "Debian" # only execute on Debian
 
-    - name: Add Jenkins Repository to Red Hat Distro via script
-      script: ~/devops/rpmrepo.sh
-      become: yes
-      when: ansible_facts['os_family'] == "RedHat"
+    - name: Add Jenkins Repository to Red Hat Distro via script 
+      script: ~/devops/rpmrepo.sh # Upload the script to prepare RedHat Distro's for jenkins installation. Script contains special Amazon recognizer to enable stream via amazon-linux-extra's.
+      become: yes # become root
+      when: ansible_facts['os_family'] == "RedHat" # Only for RedHat distro's 
 
 
     - name: "Check if listed package is installed or not on Debian Linux family"
 
-      command: dpkg-query -l "{{ item }}"
+      command: dpkg-query -l "{{ item }}" # Query if package is already installed
 
-      loop: "{{ package_names }}"
+      loop: "{{ package_names }}" # Loop all the vars package_names, so all packages get checked
 
-      register: debian_package_check
+      register: debian_package_check # Register for use in second task; install.
 
       when: ansible_facts['os_family'] == "Debian"
 
 
     - name: Install package if not present Debian
-      become: yes
+      become: yes # Become Root
       package:
 
         name: "{{ item }}"
@@ -42,33 +42,34 @@
 
       loop: "{{ package_names }}"
 
-      when: debian_package_check is failed and ansible_facts['os_family'] == "Debian"
+      when: debian_package_check is failed and ansible_facts['os_family'] == "Debian" # When package is not installed and OS is Debian install packages.
 
     - name: "Check if listed package is installed or not on Red Hat Linux family"
 
-      command: rpm -q "{{ item }}"
+      command: rpm -q "{{ item }}" # Check if package is present or not
 
-      loop: "{{ package_names }}"
+      loop: "{{ package_names }}" # Check for all packages set under package_names var
 
-      register: redhat_package_check
+      register: redhat_package_check # Remember the outcome of the check for next step
 
-      changed_when: false
+      changed_when: false # Report changed when output is false
 
-      ignore_errors: true
+      ignore_errors: true # Ignore error output
 
       when: ansible_facts['os_family'] == "RedHat"
 
     - name: Install package if not present RedHat
-      become: yes 
+      become: yes  # Become Root
       package:
 
         name: "{{ item }}"
 
-        state: present
+        state: present # Install packages, make them present
 
-      loop: "{{ package_names }}"
+      loop: "{{ package_names }}" # Install all packages we named earlier. (only the RPM names will come through, the .deb ones will fail, and vice versa for Debian )
 
-      when: redhat_package_check is failed and ansible_facts['os_family'] == "RedHat"
+      when: redhat_package_check is failed and ansible_facts['os_family'] == "RedHat" (Only apply on RedHat Systems) 
+
 
 
 
