@@ -45,19 +45,23 @@ sudo echo "[ec2_instances]
 sudo chown `ls -ld $PWD | awk '{print $3}'` $PWD/.ssh/thekey.pem # Because of Sudo/Root invocation the keyfile is now owned by root. We need to change this to the user that runs the script. Hence the inspecting of folders owner where script is run from. 
 sudo chgrp `ls -ld $PWD | awk '{print $3}'` $PWD/.ssh/thekey.pem # Set group to users group. (based of script folder (devops) folder)
 sudo chmod 600 $PWD/.ssh/thekey.pem # Here we set the permissions for the keyfile to be only rw for the owner, to prevent security issues, and make it easier for ansible to work with the file. 
-ssh -o "StrictHostKeyChecking no" `/usr/local/bin/terraform output -raw instance_public_ip` #Here we add the remote key fingerprint for automation.
-
 # using full path to binary because root on RPM does not include /usr/local/bin in PATH's  
 echo " Sleeping for 30 seconds to give EC2 Instance time to properly initialize. (or ssh might not be ready) "
-sleep 30s # Put the script to sleep for 1 minute 
 
-/usr/local/bin/ansible-playbook playbook.yaml # Here we use Ansible to run our playbook, which is also compatible on RedHat as well as Debian Distro's. (And AWS Linux, very minimal).  
+sleep 30s # Put the script to sleep for 0.5 minute 
+ssh -o "StrictHostKeyChecking no" ec2-user@`/usr/local/bin/terraform output -raw instance_public_ip` #Here we add the remote key fingerprint for automation.
+
+sleep 5s
+/usr/bin/ansible-playbook playbook.yaml # Here we use Ansible to run our playbook, which is also compatible on RedHat as well as Debian Distro's. (And AWS Linux, very minimal).  
+
 echo " going to sleep for 20 seconds before deploying post-install script "
 sleep 20s 
-/usr/local/bin/ansible-playbook post-install-rpm.yaml # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options
+/usr/bin/ansible-playbook post-install-rpm.yaml # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options
+
 echo " sleep 15 seconds to obtain password "
-sleep 15s 
+sleep 15s
+
 scp ec2-user@`/usr/local/bin/terraform output -raw instance_public_ip`:/var/lib/jenkins/secrets/initialAdminPassword $PWD/
 
-echo " All done, browse to `/usr/local/bin/terraform output -raw instance_public_ip`:8080 to see the result. Password is in /devops/initialAdminPassword
+echo " All done, browse to `/usr/local/bin/terraform output -raw instance_public_ip`:8080 to see the result. Password is /devops/initialAdminPassword"
 exit 0
