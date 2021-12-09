@@ -51,6 +51,8 @@ echo " Sleeping for 1 minute to give EC2 Instance time to properly initialize. (
 sleep 1m # Put the script to sleep for 1 minute 
 
 /usr/local/bin/ansible-playbook playbook.yaml # Here we use Ansible to run our playbook, which is also compatible on RedHat as well as Debian Distro's. (And AWS Linux, very minimal).  
+echo " going to sleep for 20 seconds before deploying post-install script "
+sleep 20s 
 /usr/local/bin/ansible-playbook post-install-rpm.yaml # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options 
 
 exit 0
