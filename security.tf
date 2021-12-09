@@ -1,9 +1,11 @@
+# This script sets up a security group for our instance, this is needed to allow ssh traffic, which we need to connect, manually and via ansible.
+
 resource "aws_security_group" "security_group" {
 
   name = "security_group"
 
 
-
+# Incoming traffic from all IP's on port 22/tcp is allowed.
   ingress {
 
     from_port   = 22
