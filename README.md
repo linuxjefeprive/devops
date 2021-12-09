@@ -16,6 +16,9 @@ git clone https://github.com/linuxjefeprive/devops.git
 cd devops
 sudo ./script 
 
+Output will be the url to browse to, and the password needed for first login into jenkins.
+
+
 ** IMPORTANT ** 
 Because the simplilearn AWS credentials change every 8 hours, it is important to make sure the creds.tf file is up to date with the latest credentials, or terraform will hang. 
 
