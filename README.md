@@ -15,6 +15,16 @@ git clone https://github.com/linuxjefeprive/devops.git
 cd devops
 sudo ./script 
 
+** IMPORTANT ** 
+Because the simplilearn AWS credentials change every 8 hours, it is important to make sure the creds.tf file is up to date with the latest credentials, or terraform will hang. 
+
+
 For grading, I made detailed comments in all the files contained in this repo. Please take your time to review all the code before making your decision on my grade, i've worked hard on this. 
+
+I would advise you to review the files in the order they are invoked; 
+
+README
+script
+
 
 
