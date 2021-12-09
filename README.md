@@ -13,7 +13,9 @@ The script fully sets up a keypair, security group, ec2 instance, firewall rules
 All you have to do to invoke the deployment is the following;
 
 git clone https://github.com/linuxjefeprive/devops.git
+
 cd devops
+
 sudo ./script 
 
 Output will be the url to browse to, and the password needed for first login into jenkins.
