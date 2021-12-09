@@ -32,4 +32,6 @@ sudo chgrp `ls -ld ~/.ssh/ | awk '{print $3}'` ~/.ssh/thekey.pem # Set group to 
 sudo chmod 600 ~/.ssh/thekey.pem # Here we set the permissions for the keyfile to be only rw for the owner, to prevent security issues, and make it easier for ansible to work with the file. 
 
 ansible-playbook playbook.yaml # Here we use Ansible to run our playbook, which is also compatible on RedHat as well as Debian Distro's. (And AWS Linux, very minimal).  
+ansible-playbook post-install-rpm.yaml # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options 
+
 exit 0
