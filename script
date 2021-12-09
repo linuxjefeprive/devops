@@ -47,6 +47,8 @@ sudo chgrp `ls -ld $PWD | awk '{print $3}'` $PWD/.ssh/thekey.pem # Set group to 
 sudo chmod 600 $PWD/.ssh/thekey.pem # Here we set the permissions for the keyfile to be only rw for the owner, to prevent security issues, and make it easier for ansible to work with the file. 
 
 # using full path to binary because root on RPM does not include /usr/local/bin in PATH's  
+echo " Sleeping for 1 minute to give EC2 Instance time to properly initialize. (or ssh might not be ready) "
+sleep 1m # Put the script to sleep for 1 minute 
 
 /usr/local/bin/ansible-playbook playbook.yaml # Here we use Ansible to run our playbook, which is also compatible on RedHat as well as Debian Distro's. (And AWS Linux, very minimal).  
 /usr/local/bin/ansible-playbook post-install-rpm.yaml # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options 
