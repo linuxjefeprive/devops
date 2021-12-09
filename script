@@ -59,11 +59,11 @@ sleep 5s
 # The script uses the .local folder in your home when the first command fails, since pip in Ubuntu 20.04 installs there.
 echo " going to sleep for 20 seconds before deploying post-install script "
 sleep 20s 
-/usr/local/bin/ansible-playbook post-install-rpm.yaml || $HOME/.local/bin/ansible-playbook.yaml 
+/usr/local/bin/ansible-playbook post-install-rpm.yaml || $HOME/.local/bin/ansible-playbook 
  # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options
 
 sleep 10s 
-/usr/local/bin/ansible-playbook password.yaml  || $HOME/.local/bin/ansible-playbook.yaml password.yaml
+/usr/local/bin/ansible-playbook password.yaml  || $HOME/.local/bin/ansible-playbook password.yaml
 
 echo " All done, browse to `/usr/local/bin/terraform output -raw instance_public_ip`:8080 to see the result. Password is `cat $PWD/initialAdminPassword` "
 
