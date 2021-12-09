@@ -9,6 +9,8 @@ sudo pip install awscli ansible
 
 elif [[ -f /usr/bin/yum ]]; then # If yum is installed instead of debian then use the yum commands to install pip, ansible and awscli. 
 sudo yum install epel-release -y; sudo yum install python3-pip.noarch -y
+sudo yum install python-devel -yy # Required for building Python packages 
+sudo yum groupinstall 'development tools' -yy # Required for building python packages
 sudo python3 -m pip install awscli ansible
 
 else  # If none of the above package managers are installed, I can not guarantee the working of the script, so we fail. 
