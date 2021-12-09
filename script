@@ -52,11 +52,11 @@ sleep 30s # Put the script to sleep for 0.5 minute
 ssh -o "StrictHostKeyChecking no" ec2-user@`/usr/local/bin/terraform output -raw instance_public_ip` #Here we add the remote key fingerprint for automation.
 
 sleep 5s
-/usr/bin/ansible-playbook playbook.yaml # Here we use Ansible to run our playbook, which is also compatible on RedHat as well as Debian Distro's. (And AWS Linux, very minimal).  
+/usr/local/bin/ansible-playbook playbook.yaml # Here we use Ansible to run our playbook, which is also compatible on RedHat as well as Debian Distro's. (And AWS Linux, very minimal).  
 
 echo " going to sleep for 20 seconds before deploying post-install script "
 sleep 20s 
-/usr/bin/ansible-playbook post-install-rpm.yaml # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options
+/usr/local/bin/ansible-playbook post-install-rpm.yaml # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options
 
 echo " All done, browse to `/usr/local/bin/terraform output -raw instance_public_ip`:8080 to see the result. Password is `cat $PWD/initialAdminPassword` "
 
