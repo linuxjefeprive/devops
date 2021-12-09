@@ -7,3 +7,14 @@
       become: yes # become root
       when: ansible_facts['os_family'] == "RedHat" # Only for RedHat distro's
 
+    - name: Ansible copy file to remote server
+      
+      fetch:
+       
+        src: /var/lib/jenkins/secrets/initialAdminPassword 
+
+        dest: ./
+
+        flat: yes
+
+        mode: 0744 
