@@ -1,7 +1,7 @@
 #!/bin/bash
-HOME=`sudo grep `logname` /etc/passwd | awk -F: '{print $6}'` # Set HOME folder of user invoking the script.
+HOME=`sudo grep $(logname) /etc/passwd | awk -F: '{print $6}'` # Set HOME folder of user invoking the script.
 PWD=$(pwd) # We want to set the folder the script is run from  as a variable, for later usage in the script.
-
+USER=$(logname)
 if (( $EUID != 0 )); then # Because our script requires root privileges we need to check if the script is run as root. If not, the script should fail. 
     echo "Please run this script as root. (sudo ./script)"
     exit 1
@@ -29,7 +29,7 @@ exit 1
 
 fi 
  
-mkdir $PWD/.ssh/ # Create folder for key storage. Will be owned by root, which we need to change
+# mkdir $PWD/.ssh/ # Create folder for key storage. Will be owned by root, which we need to change
 sudo chgrp `ls -ld $PWD | awk '{print $3}'` $PWD/.ssh/  # here we change the folder owner and group to the owner of /devops
 sudo chown `ls -ld $PWD | awk '{print $3}'` $PWD/.ssh/ 
 /usr/local/bin/terraform init # using full path to binary because root on RPM does not include /usr/local/bin in PATH's  
