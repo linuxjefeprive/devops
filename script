@@ -30,10 +30,6 @@ exit 1
 fi 
  
 
-# mkdir $PWD/.ssh/ # Create folder for key storage. Will be owned by root, which we need to change
-#sudo chgrp `ls -ld $PWD | awk '{print $3}'` $PWD/.ssh/  # here we change the folder owner and group to the owner of /devops
-#sudo chown `ls -ld $PWD | awk '{print $3}'` $PWD/.ssh/ 
-
 /usr/local/bin/terraform init # using full path to binary because root on RPM does not include /usr/local/bin in PATH's  
 /usr/local/bin/terraform plan 
 /usr/local/bin/terraform apply -auto-approve
@@ -44,10 +40,10 @@ sudo echo "[ec2_instances]
 `/usr/local/bin/terraform output -raw instance_public_ip` ansible_user=ec2-user remote_user=ec2-user ansible_ssh_private_key_file=$HOME/.ssh/thekey.pem" > /etc/ansible/hosts
 # Here we add the IP Address and username + SSH key for the newly created EC2 Instance to the ansible hosts file, so we are able to connect to it. 
 
-sudo chown $USER $HOME/.ssh/thekey.pem # Because of Sudo/Root invocation the keyfile is now owned by root. We need to change this to the user that runs the script. Hence the inspecting of folders owner where script is run from. 
-sudo chgrp $USER $HOME/.ssh/thekey.pem # Set group to users group. (based of script folder (devops) folder)
+sudo chown $USER $HOME/.ssh/thekey.pem # Because of Sudo/Root invocation the keyfile is now owned by root. We need to change this to the user that runs the script. 
+sudo chgrp $USER $HOME/.ssh/thekey.pem # Set group to users group.
 sudo chmod 600 $HOME/.ssh/thekey.pem # Here we set the permissions for the keyfile to be only rw for the owner, to prevent security issues, and make it easier for ansible to work with the file. 
-# using full path to binary because root on RPM does not include /usr/local/bin in PATH's  
+
 echo " Sleeping for 30 seconds to give EC2 Instance time to properly initialize. (or ssh might not be ready) "
 
 sleep 30s # Put the script to sleep for 0.5 minute 
@@ -59,10 +55,10 @@ sleep 5s
 # The script uses the .local folder in your home when the first command fails, since pip in Ubuntu 20.04 installs there.
 echo " going to sleep for 20 seconds before deploying post-install script "
 sleep 20s 
-/usr/local/bin/ansible-playbook post-install-rpm.yaml || $HOME/.local/bin/ansible-playbook 
+/usr/local/bin/ansible-playbook post-install-rpm.yaml || $HOME/.local/bin/ansible-playbook post-install-rpm.yaml  
  # Here we use the post-install script only on RPM Distro's to configure the service to start, and optionally set firewall options
 
-sleep 10s 
+sleep 10s  # Here we deploy the playbook to obtain the Jenkins Password 
 /usr/local/bin/ansible-playbook password.yaml  || $HOME/.local/bin/ansible-playbook password.yaml
 
 echo " All done, browse to `/usr/local/bin/terraform output -raw instance_public_ip`:8080 to see the result. Password is `cat $PWD/initialAdminPassword` "
