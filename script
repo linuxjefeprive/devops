@@ -29,13 +29,15 @@ exit 1
 
 fi 
  
+mkdir $PWD/.ssh/ # Create folder for key storage. Will be owned by root, which we need to change
+sudo chgrp `ls -ld $PWD | awk '{print $3}'` $PWD/.ssh/  # here we change the folder owner and group to the owner of /devops
+sudo chown `ls -ld $PWD | awk '{print $3}'` $PWD/.ssh/ 
 /usr/local/bin/terraform init # using full path to binary because root on RPM does not include /usr/local/bin in PATH's  
 /usr/local/bin/terraform plan 
 /usr/local/bin/terraform apply -auto-approve
 
 sudo mkdir /etc/ansible # create Ansible configuration folder. (last resort for ansible, it first looks at ENV, Homefolder and current folder for configs) 
 sudo touch /etc/ansible/hosts # Create hosts file if not existent, (because of PIP install ansible will be local to user, so we need to create it ) 
-mkdir $PWD/.ssh/
 sudo echo "[ec2_instances]
 `/usr/local/bin/terraform output -raw instance_public_ip` ansible_user=ec2-user remote_user=ec2-user ansible_ssh_private_key_file=$PWD/.ssh/thekey.pem" > /etc/ansible/hosts
 # Here we add the IP Address and username + SSH key for the newly created EC2 Instance to the ansible hosts file, so we are able to connect to it. 
